@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">IFA Medical Consult</string>
+    <string name="title_activity_main">IFA Medical Consult</string>
+    <string name="package_name">id.ifabeauty.medicalconsult</string>
+    <string name="custom_url_scheme">id.ifabeauty.medicalconsult</string>
+</resources>
