@@ -271,25 +271,19 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-slate-100 flex justify-center">
         <div className="w-full max-w-md min-h-screen bg-white flex flex-col justify-between shadow-xl overflow-hidden">
-          {/* Logo Full di Bagian Atas */}
-          <div className="w-full bg-gradient-to-b from-pink-50 to-white border-b border-pink-100">
+          {/* Banner Atas Pink dengan Logo Full */}
+          <div className="w-full bg-gradient-to-br from-pink-600 to-pink-800 text-white pt-8 pb-6 px-5 rounded-b-[2rem] shadow-md text-center space-y-2">
             <img
               src={LOGO_URL}
               alt="IFA Medical Consult Logo"
-              className="w-full max-h-44 object-contain mx-auto block"
+              className="w-full max-h-36 object-contain mx-auto block"
             />
+            <p className="text-pink-100 text-xs">
+              Kolaborasi Klinis Dokter &amp; Spesialis • Ifa Beauty
+            </p>
           </div>
 
           <div className="px-6 py-6 flex-1 flex flex-col justify-center space-y-5">
-            <div className="text-center">
-              <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">
-                IFA MEDICAL CONSULT
-              </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Kolaborasi Klinis Dokter &amp; Spesialis • Ifa Beauty
-              </p>
-            </div>
-
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5">
@@ -391,18 +385,18 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-slate-100 flex justify-center">
         <div className="w-full max-w-md min-h-screen bg-slate-50 flex flex-col shadow-xl">
-          <div className="bg-white border-b border-slate-200 px-4 py-3.5 flex items-center justify-between sticky top-0 z-10">
+          <div className="bg-gradient-to-r from-pink-700 to-pink-800 text-white px-4 py-3.5 flex items-center justify-between sticky top-0 z-10 shadow-sm">
             <button
               onClick={() => setSelectedConsult(null)}
-              className="flex items-center gap-1.5 text-slate-700 font-semibold text-sm"
+              className="flex items-center gap-1.5 text-white font-semibold text-sm"
             >
-              <ArrowLeft className="w-5 h-5 text-pink-700" />
+              <ArrowLeft className="w-5 h-5 text-pink-100" />
               Kembali
             </button>
             {selectedConsult.status !== "Selesai" && (
               <button
                 onClick={handleMarkDone}
-                className="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1"
+                className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white text-emerald-700 shadow-sm flex items-center gap-1"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Tandai Selesai
@@ -521,17 +515,17 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-100 flex justify-center">
       <div className="w-full max-w-md min-h-screen bg-slate-50 flex flex-col shadow-xl relative">
-        {/* Header Atas dengan Logo Full */}
-        <div className="bg-white border-b border-pink-100 sticky top-0 z-10 shadow-sm">
-          <div className="w-full bg-gradient-to-b from-pink-50/80 to-white">
+        {/* Header Atas Berwarna Pink dengan Logo Full */}
+        <div className="bg-gradient-to-br from-pink-600 via-pink-700 to-pink-800 text-white sticky top-0 z-10 shadow-md">
+          <div className="w-full px-4 pt-3 pb-1.5">
             <img
               src={LOGO_URL}
               alt="IFA Medical Logo"
-              className="w-full max-h-24 object-contain mx-auto block"
+              className="w-full max-h-20 object-contain mx-auto block"
             />
           </div>
-          <div className="bg-gradient-to-r from-pink-700 to-pink-800 text-white px-4 py-2 flex items-center justify-between">
-            <p className="text-[11px] text-pink-50 font-medium truncate">
+          <div className="px-4 py-2 border-t border-white/15 flex items-center justify-between">
+            <p className="text-[11px] text-pink-100 font-medium truncate">
               {currentUser.full_name} • {currentUser.specialty || currentUser.role}
             </p>
             <button
