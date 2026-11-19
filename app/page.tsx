@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
 import {
-  Stethoscope,
   Lock,
   User,
   Plus,
@@ -23,6 +22,9 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+
+const LOGO_URL =
+  "https://raw.githubusercontent.com/fauzanbunz/ifabeauty/main/fdfdfdfd.png";
 
 interface AppUser {
   id: string;
@@ -131,24 +133,40 @@ export default function HomePage() {
 
     const { data, error } = await supabase
       .from("app_users")
-      .select("id, username, full_name, role, specialty")
-      .eq("username", cleanUsername)
-      .eq("password", cleanPassword)
-      .maybeSingle();
+      .select("id, username, password, full_name, role, specialty")
+      .ilike("username", cleanUsername);
 
     setLoginLoading(false);
 
     if (error) {
-      setLoginError("Gagal terhubung ke database: " + error.message);
+      setLoginError("Gagal akses database: " + error.message);
       return;
     }
 
-    if (!data) {
-      setLoginError("Username atau password tidak cocok. Cek tabel app_users di Supabase.");
+    if (!data || data.length === 0) {
+      setLoginError(
+        "Username tidak ditemukan atau akses tabel app_users belum dibuka di SQL Editor."
+      );
       return;
     }
 
-    const userObj = data as AppUser;
+    const matchedUser = data.find(
+      (row) => String(row.password ?? "").trim() === cleanPassword
+    );
+
+    if (!matchedUser) {
+      setLoginError("Password salah. Periksa kolom password di tabel app_users.");
+      return;
+    }
+
+    const userObj: AppUser = {
+      id: matchedUser.id,
+      username: matchedUser.username,
+      full_name: matchedUser.full_name,
+      role: matchedUser.role,
+      specialty: matchedUser.specialty,
+    };
+
     setCurrentUser(userObj);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userObj));
   };
@@ -252,22 +270,26 @@ export default function HomePage() {
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-slate-100 flex justify-center">
-        <div className="w-full max-w-md min-h-screen bg-white flex flex-col justify-between shadow-xl">
-          <div className="bg-gradient-to-br from-pink-600 to-pink-800 text-white pt-14 pb-10 px-6 rounded-b-[2rem] shadow-md text-center space-y-3">
-            <div className="w-16 h-16 mx-auto bg-white/15 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/25">
-              <Stethoscope className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-extrabold tracking-tight">
+        <div className="w-full max-w-md min-h-screen bg-white flex flex-col justify-between shadow-xl overflow-hidden">
+          {/* Logo Full di Bagian Atas */}
+          <div className="w-full bg-gradient-to-b from-pink-50 to-white border-b border-pink-100">
+            <img
+              src={LOGO_URL}
+              alt="IFA Medical Consult Logo"
+              className="w-full max-h-44 object-contain mx-auto block"
+            />
+          </div>
+
+          <div className="px-6 py-6 flex-1 flex flex-col justify-center space-y-5">
+            <div className="text-center">
+              <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">
                 IFA MEDICAL CONSULT
               </h1>
-              <p className="text-pink-100 text-xs mt-1">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Kolaborasi Klinis Dokter &amp; Spesialis • Ifa Beauty
               </p>
             </div>
-          </div>
 
-          <div className="px-6 py-8 flex-1 flex flex-col justify-center space-y-6">
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5">
@@ -328,7 +350,7 @@ export default function HomePage() {
               </button>
             </form>
 
-            <div className="pt-4 border-t border-slate-100 space-y-2.5">
+            <div className="pt-3 border-t border-slate-100 space-y-2">
               <p className="text-[11px] font-medium text-slate-400 text-center">
                 Isi Cepat Akun Demo:
               </p>
@@ -356,7 +378,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="p-5 text-center text-[11px] text-slate-400">
+          <div className="p-4 text-center text-[11px] text-slate-400">
             Kelola daftar user &amp; password langsung di Supabase Table Editor.
           </div>
         </div>
@@ -499,21 +521,27 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-100 flex justify-center">
       <div className="w-full max-w-md min-h-screen bg-slate-50 flex flex-col shadow-xl relative">
-        {/* Header Atas */}
-        <div className="bg-gradient-to-r from-pink-700 to-pink-800 text-white px-5 pt-5 pb-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
-          <div>
-            <h1 className="font-extrabold text-base tracking-tight">IFA MEDICAL</h1>
-            <p className="text-[11px] text-pink-100">
+        {/* Header Atas dengan Logo Full */}
+        <div className="bg-white border-b border-pink-100 sticky top-0 z-10 shadow-sm">
+          <div className="w-full bg-gradient-to-b from-pink-50/80 to-white">
+            <img
+              src={LOGO_URL}
+              alt="IFA Medical Logo"
+              className="w-full max-h-24 object-contain mx-auto block"
+            />
+          </div>
+          <div className="bg-gradient-to-r from-pink-700 to-pink-800 text-white px-4 py-2 flex items-center justify-between">
+            <p className="text-[11px] text-pink-50 font-medium truncate">
               {currentUser.full_name} • {currentUser.specialty || currentUser.role}
             </p>
+            <button
+              onClick={fetchConsultations}
+              className="p-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition shrink-0"
+              title="Segarkan Data"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${loadingData ? "animate-spin" : ""}`} />
+            </button>
           </div>
-          <button
-            onClick={fetchConsultations}
-            className="p-2 rounded-xl bg-white/15 hover:bg-white/25 transition"
-            title="Segarkan Data"
-          >
-            <RefreshCw className={`w-4 h-4 ${loadingData ? "animate-spin" : ""}`} />
-          </button>
         </div>
 
         {/* Konten Tab */}
